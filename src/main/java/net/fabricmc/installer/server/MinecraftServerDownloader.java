@@ -50,7 +50,7 @@ public class MinecraftServerDownloader {
 		Files.move(serverJarTmp, serverJar, StandardCopyOption.REPLACE_EXISTING);
 	}
 
-	private boolean isServerJarValid(Path serverJar) throws IOException {
+	public boolean isServerJarValid(Path serverJar) throws IOException {
 		if (!Files.exists(serverJar)) {
 			return false;
 		}
@@ -58,7 +58,7 @@ public class MinecraftServerDownloader {
 		return Utils.sha1String(serverJar).equalsIgnoreCase(getServerDownload().sha1);
 	}
 
-	private VersionMeta getVersionMeta() throws IOException {
+	public VersionMeta getVersionMeta() throws IOException {
 		LauncherMeta.Version version = LauncherMeta.getLauncherMeta().getVersion(gameVersion);
 
 		if (version == null) {
@@ -68,7 +68,7 @@ public class MinecraftServerDownloader {
 		return version.getVersionMeta();
 	}
 
-	private VersionMeta.Download getServerDownload() throws IOException {
+	public VersionMeta.Download getServerDownload() throws IOException {
 		return getVersionMeta().downloads.get("server");
 	}
 }

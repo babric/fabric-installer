@@ -24,14 +24,10 @@ import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -40,9 +36,6 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.stream.Collectors;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -55,20 +48,18 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import mjson.Json;
-
 import net.fabricmc.installer.InstallerGui;
-import net.fabricmc.installer.util.LauncherMeta;
 import net.fabricmc.installer.util.Utils;
 
 public class ServerPostInstallDialog extends JDialog {
-	private static final String launchCommand = "java -Xmx2G -jar fabric-server-launch.jar nogui";
+	private static final String launchCommand = "java -Dfabric.log.disableAnsi=false -Xmx2G -jar fabric-server-launch.jar nogui";
 	private static final int MB = 1000000;
 
 	private final JPanel panel = new JPanel();
 
 	private final ServerHandler serverHandler;
 	private final String minecraftVersion;
+	private final MinecraftServerDownloader downloader;
 	private final Path installDir;
 	private final Path minecraftJar;
 	private final Path minecraftJarTmp;
@@ -81,6 +72,7 @@ public class ServerPostInstallDialog extends JDialog {
 		super(InstallerGui.instance, true);
 		this.serverHandler = handler;
 		this.minecraftVersion = (String) handler.gameVersionComboBox.getSelectedItem();
+		this.downloader = new MinecraftServerDownloader(minecraftVersion);
 		this.installDir = Paths.get(handler.installLocation.getText());
 		this.minecraftJar = installDir.resolve("server.jar");
 		this.minecraftJarTmp = installDir.resolve("server.jar.tmp");
@@ -133,26 +125,8 @@ public class ServerPostInstallDialog extends JDialog {
 			return false;
 		}
 
-		try (JarFile jarFile = new JarFile(minecraftJar.toFile())) {
-			JarEntry versionEntry = jarFile.getJarEntry("version.json");
-
-			if (versionEntry == null) {
-				return false;
-			}
-
-			InputStream inputStream = jarFile.getInputStream(versionEntry);
-
-			String text;
-
-			try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-				text = reader.lines().collect(Collectors.joining("\n"));
-			}
-
-			Json json = Json.read(text);
-			String id = json.at("id").asString();
-			String name = json.at("name").asString();
-
-			return minecraftVersion.equals(id) || minecraftVersion.equals(name);
+		try {
+			return downloader.isServerJarValid(minecraftJar);
 		} catch (IOException e) {
 			return false;
 		}
@@ -186,7 +160,7 @@ public class ServerPostInstallDialog extends JDialog {
 
 		new Thread(() -> {
 			try {
-				URL url = new URL(LauncherMeta.getLauncherMeta().getVersion(minecraftVersion).getVersionMeta().downloads.get("server").url);
+				URL url = new URL(downloader.getServerDownload().url);
 				HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
 				int finalSize = httpConnection.getContentLength();
 
