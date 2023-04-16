@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Locale;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -211,7 +212,7 @@ public abstract class Handler implements InstallerProgress {
 		JLabel label = new JLabel();
 		Font font = label.getFont();
 		Color color = label.getBackground();
-		return String.format(
+		return String.format(Locale.ENGLISH,
 				"font-family:%s;font-weight:%s;font-size:%dpt;background-color: rgb(%d,%d,%d);",
 				font.getFamily(), (font.isBold() ? "bold" : "normal"), font.getSize(), color.getRed(), color.getGreen(), color.getBlue()
 				);
@@ -291,12 +292,6 @@ public abstract class Handler implements InstallerProgress {
 		return args.getOrDefault("mcversion", () -> {
 			System.out.println("Using latest game version");
 
-			try {
-				Main.GAME_VERSION_META.load();
-			} catch (IOException e) {
-				throw new RuntimeException("Failed to load latest versions", e);
-			}
-
 			return Main.GAME_VERSION_META.getLatestVersion(args.has("snapshot")).getVersion();
 		});
 	}
@@ -304,12 +299,6 @@ public abstract class Handler implements InstallerProgress {
 	protected String getLoaderVersion(ArgumentParser args) {
 		return args.getOrDefault("loader", () -> {
 			System.out.println("Using latest loader version");
-
-			try {
-				Main.LOADER_META.load();
-			} catch (IOException e) {
-				throw new RuntimeException("Failed to load latest versions", e);
-			}
 
 			return Main.LOADER_META.getLatestVersion(false).getVersion();
 		});

@@ -19,12 +19,14 @@ package net.fabricmc.installer.util;
 public class Reference {
 	public static final String LOADER_NAME = "fabric-loader";
 
-	public static String metaServerUrl = "https://meta.babric.glass-launcher.net/";
-	public static String fabricApiUrl = "https://www.curseforge.com/minecraft/mc-mods/fabric-api/";
-	public static String minecraftLauncherManifest = "https://babric.github.io/manifest-polyfill/version_manifest_v2.json";
-	public static String experimentalVersionsManifest = "https://maven.fabricmc.net/net/minecraft/experimental_versions.json";
+	public static final String SERVER_LAUNCHER_URL = "https://babric.github.io/use/server/";
+	public static final String MINECRAFT_LAUNCHER_MANIFEST = "https://babric.github.io/manifest-polyfill/version_manifest_v2.json";
+	public static final String EXPERIMENTAL_LAUNCHER_MANIFEST = "https://maven.fabricmc.net/net/minecraft/experimental_versions.json";
 
-	public static String getMetaServerEndpoint(String path) {
-		return metaServerUrl + path;
-	}
+	static final String DEFAULT_META_SERVER = "https://meta.babric.glass-launcher.net/";
+	static final String DEFAULT_MAVEN_SERVER = "https://maven.glass-launcher.net/babric/";
+
+	static final FabricService[] FABRIC_SERVICES = {
+			new FabricService(DEFAULT_META_SERVER, DEFAULT_MAVEN_SERVER)
+	};
 }
