@@ -23,14 +23,10 @@ import java.awt.Font;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -39,9 +35,6 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.stream.Collectors;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -54,10 +47,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import mjson.Json;
-
 import net.fabricmc.installer.InstallerGui;
-import net.fabricmc.installer.util.LauncherMeta;
 import net.fabricmc.installer.util.Utils;
 
 @SuppressWarnings("serial")

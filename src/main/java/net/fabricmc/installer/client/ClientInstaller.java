@@ -20,14 +20,12 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.MessageFormat;
 
 import mjson.Json;
 
 import net.fabricmc.installer.LoaderVersion;
 import net.fabricmc.installer.util.FabricService;
 import net.fabricmc.installer.util.InstallerProgress;
-import net.fabricmc.installer.util.Library;
 import net.fabricmc.installer.util.Reference;
 import net.fabricmc.installer.util.Utils;
 

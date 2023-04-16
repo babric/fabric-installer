@@ -39,7 +39,6 @@ import net.fabricmc.installer.LoaderVersion;
 import net.fabricmc.installer.launcher.MojangLauncherHelperWrapper;
 import net.fabricmc.installer.util.ArgumentParser;
 import net.fabricmc.installer.util.InstallerProgress;
-import net.fabricmc.installer.util.Reference;
 import net.fabricmc.installer.util.Utils;
 
 public class ClientHandler extends Handler {
