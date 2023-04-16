@@ -60,22 +60,6 @@ public class ClientInstaller {
 		Json json = FabricService.queryMetaJson(String.format("v2/versions/loader/%s/%s/profile/json", gameVersion, loaderVersion.name));
 		Files.write(profileJson, json.toString().getBytes(StandardCharsets.UTF_8));
 
-		/*
-		Downloading the libraries isn't strictly necessary as the launcher will do it for us.
-		Do it anyway in case the launcher fails, we know we have a working connection to maven here.
-		 */
-		Path libsDir = mcDir.resolve("libraries");
-
-		for (Json libraryJson : json.at("libraries").asJsonList()) {
-			Library library = new Library(libraryJson);
-			Path libraryFile = libsDir.resolve(library.getPath());
-			String url = library.getURL();
-
-			//System.out.println("Downloading "+url+" to "+libraryFile);
-			progress.updateProgress(new MessageFormat(Utils.BUNDLE.getString("progress.download.library.entry")).format(new Object[]{library.name}));
-			FabricService.downloadSubstitutedMaven(url, libraryFile);
-		}
-
 		progress.updateProgress(Utils.BUNDLE.getString("progress.done"));
 
 		return profileName;
