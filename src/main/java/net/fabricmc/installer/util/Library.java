@@ -34,7 +34,7 @@ public class Library {
 
 	public Library(Json json) {
 		name = json.at("name").asString();
-		url = json.at("url").asString();
+		url = json.has("url") ? json.at("url").asString() : null;
 		inputPath = null;
 	}
 

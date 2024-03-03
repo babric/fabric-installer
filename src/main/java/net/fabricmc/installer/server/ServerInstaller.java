@@ -112,6 +112,8 @@ public class ServerInstaller {
 		List<Path> libraryFiles = new ArrayList<>();
 
 		for (Library library : libraries) {
+			if (library.url == null) continue;
+
 			Path libraryFile = libsDir.resolve(library.getPath());
 
 			if (library.inputPath == null) {
